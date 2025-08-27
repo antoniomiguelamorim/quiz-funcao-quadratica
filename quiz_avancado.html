@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Avançado: Função Quadrática</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; }
+  #container { background: white; width: 550px; margin: 50px auto; padding: 20px; border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.2);}
+  button { padding: 10px 15px; margin: 5px; font-size: 16px; cursor: pointer; }
+  .resposta { display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div id="container">
+  <h1>Quiz Avançado: Função Quadrática</h1>
+  <p id="pergunta"></p>
+  <div id="opcoes"></div>
+  <p id="resultado"></p>
+  <p id="pontuacao"></p>
+  <button onclick="proximaPergunta()">Próxima Pergunta</button>
+</div>
+
+<script>
+const quizOriginal = [
+  { pergunta: "Qual a forma geral de uma função polinomial do segundo grau?", opcoes: ["ax^2 + bx + c", "ax + b", "ax^3 + bx^2 + c", "a/x + b"], correta: 0 },
+  { pergunta: "O que representa o coeficiente 'a'?", opcoes: ["Inclinação da reta", "Concavidade da parábola", "Raiz da função", "Valor de y inicial"], correta: 1 },
+  { pergunta: "Como se calcula o vértice da função f(x) = ax^2 + bx + c?", opcoes: ["x = -b/(2a), y = f(x)", "x = b/2a, y = f(x)", "x = -c/b, y = 0", "x = 0, y = c"], correta: 0 },
+  { pergunta: "Quando a parábola abre para cima?", opcoes: ["a > 0", "a < 0", "b > 0", "c > 0"], correta: 0 },
+  { pergunta: "Qual a fórmula de Bhaskara?", opcoes: ["x = (-b ± √(b²-4ac))/2a", "x = -b/2a", "x = -c/b", "x = a+b+c"], correta: 0 },
+  { pergunta: "O que é o discriminante Δ?", opcoes: ["Δ = b²-4ac", "Δ = a+b+c", "Δ = -b/2a", "Δ = c²-b²"], correta: 0 },
+  { pergunta: "Se Δ > 0, quantas raízes reais existem?", opcoes: ["2", "1", "0", "Infinitas"], correta: 0 },
+  { pergunta: "Se Δ = 0, a parábola toca o eixo x em quantos pontos?", opcoes: ["1", "0", "2", "3"], correta: 0 },
+  { pergunta: "Se Δ < 0, a parábola tem quantas raízes reais?", opcoes: ["0", "1", "2", "Infinitas"], correta: 0 },
+  { pergunta: "O vértice da parábola é o ponto de?", opcoes: ["Máximo ou mínimo", "Intercepto y", "Raiz", "Coeficiente a"], correta: 0 }
+];
+
+// Função para embaralhar arrays
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let quiz = shuffleArray([...quizOriginal]); // embaralha perguntas
+let i = 0;
+let pontuacao = 0;
+
+function mostrarPergunta() {
+  document.getElementById("resultado").innerText = "";
+  document.getElementById("pontuacao").innerText = `Pontuação: ${pontuacao} / ${quiz.length}`;
+  let perguntaAtual = quiz[i];
+  document.getElementById("pergunta").innerText = perguntaAtual.pergunta;
+
+  // Embaralha opções
+  let opcoesComIndice = perguntaAtual.opcoes.map((op, idx) => ({op, idx}));
+  opcoesComIndice = shuffleArray(opcoesComIndice);
+
+  let opcoesDiv = document.getElementById("opcoes");
+  opcoesDiv.innerHTML = "";
+  opcoesComIndice.forEach(item => {
+    let btn = document.createElement("button");
+    btn.innerText = item.op;
+    btn.className = "resposta";
+    btn.onclick = () => verificar(item.idx);
+    opcoesDiv.appendChild(btn);
+  });
+}
+
+function verificar(resposta) {
+  if (resposta === quiz[i].correta) {
+    document.getElementById("resultado").innerText = "✅ Correto!";
+    pontuacao++;
+  } else {
+    document.getElementById("resultado").innerText = "❌ Errado!";
+  }
+  document.getElementById("pontuacao").innerText = `Pontuação: ${pontuacao} / ${quiz.length}`;
+}
+
+function proximaPergunta() {
+  i++;
+  if (i >= quiz.length) {
+    alert(`🎉 Quiz finalizado! Sua pontuação: ${pontuacao} / ${quiz.length}`);
+    quiz = shuffleArray([...quizOriginal]); // reinicia quiz com perguntas embaralhadas
+    i = 0;
+    pontuacao = 0;
+  }
+  mostrarPergunta();
+}
+
+mostrarPergunta();
+</script>
+</body>
+</html>
